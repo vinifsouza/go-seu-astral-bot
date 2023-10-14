@@ -19,6 +19,11 @@ var (
 	configs           Configs
 )
 
+const (
+	CMDStart = "!sa start"
+	CMDCount = "!sa count"
+)
+
 func main() {
 	configs = LoadConfigs()
 
@@ -34,15 +39,7 @@ func main() {
 		return
 	}
 
-	sess.AddHandler(func(s *discordgo.Session, m *discordgo.MessageCreate) {
-		if m.Author.ID == s.State.SessionID {
-			return
-		}
-
-		if strings.HasPrefix(m.Content, "!sa start") {
-			commands.Start(s, m, buffer)
-		}
-	})
+	sess.AddHandler(handleCommands)
 
 	sess.Identify.Intents = discordgo.IntentsAllWithoutPrivileged
 
@@ -60,4 +57,14 @@ func main() {
 
 	signal.Notify(sc, syscall.SIGINT, syscall.SIGTERM, os.Interrupt)
 	<-sc
+}
+
+func handleCommands(s *discordgo.Session, m *discordgo.MessageCreate) {
+	if m.Author.ID == s.State.SessionID {
+		return
+	}
+
+	if strings.HasPrefix(m.Content, CMDStart) {
+		commands.Start(s, m, buffer)
+	}
 }

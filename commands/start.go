@@ -17,7 +17,7 @@ func Start(s *discordgo.Session, m *discordgo.MessageCreate, buffer [][]byte) {
 	// Find the guild for that channel.
 	g, err := s.State.Guild(c.GuildID)
 	if err != nil {
-		// Could not find guild.
+		fmt.Println("Error s.State.Guild: ", err)
 		return
 	}
 
@@ -26,7 +26,7 @@ func Start(s *discordgo.Session, m *discordgo.MessageCreate, buffer [][]byte) {
 		if vs.UserID == m.Author.ID {
 			err = sounds.Play(s, buffer, g.ID, vs.ChannelID)
 			if err != nil {
-				fmt.Println("Error playing sound:", err)
+				fmt.Println("Error playing sound: ", err)
 			}
 
 			return
