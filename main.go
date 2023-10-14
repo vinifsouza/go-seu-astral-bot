@@ -1,10 +1,9 @@
 package main
 
 import (
-	"encoding/binary"
 	"fmt"
+	"go-seu-astral-bot/commands"
 	"go-seu-astral-bot/sounds"
-	"io"
 	"log"
 	"os"
 	"os/signal"
@@ -22,14 +21,14 @@ var (
 
 func main() {
 	configs = LoadConfigs()
-	sess, err := discordgo.New("Bot " + configs["DISCORD_BOT_TOKEN"])
 
+	sess, err := discordgo.New("Bot " + configs["DISCORD_BOT_TOKEN"])
 	if err != nil {
 		fmt.Println("Error creating Discord Session: ", err)
 		return
 	}
 
-	err = loadSound()
+	err = sounds.Load(&buffer)
 	if err != nil {
 		fmt.Println("Error loading sound: ", err)
 		return
@@ -41,7 +40,7 @@ func main() {
 		}
 
 		if strings.HasPrefix(m.Content, "!sa start") {
-			handleStartCommand(s, m)
+			commands.Start(s, m, buffer)
 		}
 	})
 
@@ -61,73 +60,4 @@ func main() {
 
 	signal.Notify(sc, syscall.SIGINT, syscall.SIGTERM, os.Interrupt)
 	<-sc
-}
-
-func handleStartCommand(s *discordgo.Session, m *discordgo.MessageCreate) {
-	c, err := s.State.Channel(m.ChannelID)
-	if err != nil {
-		fmt.Println("Error s.State.Channel: ", err)
-		return
-	}
-
-	// Find the guild for that channel.
-	g, err := s.State.Guild(c.GuildID)
-	if err != nil {
-		// Could not find guild.
-		return
-	}
-
-	// Look for the message sender in that guild's current voice states.
-	for _, vs := range g.VoiceStates {
-		if vs.UserID == m.Author.ID {
-			err = sounds.Play(s, buffer, g.ID, vs.ChannelID)
-			if err != nil {
-				fmt.Println("Error playing sound:", err)
-			}
-
-			return
-		}
-	}
-}
-
-func loadSound() error {
-	file, err := os.Open("seu-astral.dca")
-	if err != nil {
-		fmt.Println("Error opening dca file :", err)
-		return err
-	}
-
-	var opuslen int16
-
-	for {
-		// Read opus frame length from dca file.
-		err = binary.Read(file, binary.LittleEndian, &opuslen)
-
-		// If this is the end of the file, just return.
-		if err == io.EOF || err == io.ErrUnexpectedEOF {
-			err := file.Close()
-			if err != nil {
-				return err
-			}
-			return nil
-		}
-
-		if err != nil {
-			fmt.Println("Error reading from dca file :", err)
-			return err
-		}
-
-		// Read encoded pcm from dca file.
-		InBuf := make([]byte, opuslen)
-		err = binary.Read(file, binary.LittleEndian, &InBuf)
-
-		// Should not be any end of file errors
-		if err != nil {
-			fmt.Println("Error reading from dca file :", err)
-			return err
-		}
-
-		// Append encoded pcm data to the buffer.
-		buffer = append(buffer, InBuf)
-	}
 }
