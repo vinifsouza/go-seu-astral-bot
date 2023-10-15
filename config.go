@@ -18,6 +18,7 @@ func LoadConfigs() Configs {
 
 	config := Configs{
 		"DISCORD_BOT_TOKEN": os.Getenv("DISCORD_BOT_TOKEN"),
+		"APP_LANGUAGE":      os.Getenv("APP_LANGUAGE"),
 	}
 
 	return config

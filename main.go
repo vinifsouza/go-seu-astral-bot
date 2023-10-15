@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"go-seu-astral-bot/commands"
 	"go-seu-astral-bot/sounds"
+	"go-seu-astral-bot/translate"
 	"log"
 	"os"
 	"os/signal"
@@ -15,8 +16,9 @@ import (
 
 var (
 	buffer            = make([][]byte, 0)
-	DISCORD_BOT_TOKEN string
 	configs           Configs
+	DISCORD_BOT_TOKEN string
+	_translate        translate.Translate
 )
 
 const (
@@ -26,6 +28,7 @@ const (
 
 func main() {
 	configs = LoadConfigs()
+	_translate = translate.Load(configs["APP_LANGUAGE"])
 
 	sess, err := discordgo.New("Bot " + configs["DISCORD_BOT_TOKEN"])
 	if err != nil {
@@ -51,7 +54,7 @@ func main() {
 
 	defer sess.Close()
 
-	fmt.Println("O bot para tocar Seu Astral em loop foi inciado!")
+	fmt.Println(_translate["START_MESSAGE"])
 
 	sc := make(chan os.Signal, 1)
 
