@@ -15,10 +15,9 @@ import (
 )
 
 var (
-	buffer            = make([][]byte, 0)
-	configs           Configs
-	DISCORD_BOT_TOKEN string
-	_translate        translate.Translate
+	buffer     = make([][]byte, 0)
+	configs    Configs
+	_translate translate.Translate
 )
 
 const (
