@@ -17,6 +17,7 @@ import (
 var (
 	buffer     = make([][]byte, 0)
 	configs    Configs
+	loopCount  = 0
 	_translate translate.Translate
 )
 
@@ -61,12 +62,16 @@ func main() {
 	<-sc
 }
 
-func handleCommands(s *discordgo.Session, m *discordgo.MessageCreate) {
-	if m.Author.ID == s.State.SessionID {
+func handleCommands(session *discordgo.Session, message *discordgo.MessageCreate) {
+	if message.Author.ID == session.State.SessionID {
 		return
 	}
 
-	if strings.HasPrefix(m.Content, CMDStart) {
-		commands.Start(s, m, buffer)
+	if strings.HasPrefix(message.Content, CMDStart) {
+		commands.Start(session, message, buffer, &loopCount)
+	}
+
+	if strings.HasPrefix(message.Content, CMDCount) {
+		commands.Count(session, message, &loopCount)
 	}
 }

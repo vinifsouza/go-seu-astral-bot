@@ -7,7 +7,7 @@ import (
 	"github.com/fatih/color"
 )
 
-func Start(s *discordgo.Session, m *discordgo.MessageCreate, buffer [][]byte) {
+func Start(s *discordgo.Session, m *discordgo.MessageCreate, buffer [][]byte, loopCount *int) {
 	c, err := s.State.Channel(m.ChannelID)
 	if err != nil {
 		color.Red("Error s.State.Channel: %v", err)
@@ -24,7 +24,7 @@ func Start(s *discordgo.Session, m *discordgo.MessageCreate, buffer [][]byte) {
 	// Look for the message sender in that guild's current voice states.
 	for _, vs := range g.VoiceStates {
 		if vs.UserID == m.Author.ID {
-			err = sounds.Play(s, buffer, g.ID, vs.ChannelID)
+			err = sounds.Play(s, buffer, loopCount, g.ID, vs.ChannelID)
 			if err != nil {
 				color.Red("Error playing sound: %v", err)
 			}
