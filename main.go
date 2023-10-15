@@ -23,6 +23,7 @@ var (
 
 const (
 	CMDStart = "!sa start"
+	CMDStop  = "!sa stop"
 	CMDCount = "!sa count"
 )
 
@@ -36,7 +37,7 @@ func main() {
 		return
 	}
 
-	err = sounds.Load(&buffer)
+	err = sounds.Load(&buffer, configs)
 	if err != nil {
 		fmt.Println("Error loading sound: ", err)
 		return
@@ -73,5 +74,9 @@ func handleCommands(session *discordgo.Session, message *discordgo.MessageCreate
 
 	if strings.HasPrefix(message.Content, CMDCount) {
 		commands.Count(session, message, &loopCount)
+	}
+
+	if strings.HasPrefix(message.Content, CMDStop) {
+		commands.Stop(session, message, configs)
 	}
 }

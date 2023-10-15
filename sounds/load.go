@@ -8,8 +8,8 @@ import (
 	"github.com/fatih/color"
 )
 
-func Load(buffer *[][]byte) error {
-	file, err := os.Open("assets/seu-astral.dca")
+func Load(buffer *[][]byte, configs map[string]string) error {
+	file, err := os.Open(configs["APP_SOUND_PATH"])
 	if err != nil {
 		color.Red("Error opening dca file: %v", err)
 		return err
