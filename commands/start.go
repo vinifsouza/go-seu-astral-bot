@@ -7,24 +7,24 @@ import (
 	"github.com/fatih/color"
 )
 
-func Start(s *discordgo.Session, m *discordgo.MessageCreate, buffer [][]byte, loopCount *int) {
-	c, err := s.State.Channel(m.ChannelID)
+func Start(dcSession *discordgo.Session, dcMessage *discordgo.MessageCreate, buffer [][]byte, loopCount *int) {
+	channel, err := dcSession.State.Channel(dcMessage.ChannelID)
 	if err != nil {
 		color.Red("Error s.State.Channel: %v", err)
 		return
 	}
 
 	// Find the guild for that channel.
-	g, err := s.State.Guild(c.GuildID)
+	guild, err := dcSession.State.Guild(channel.GuildID)
 	if err != nil {
 		color.Red("Error s.State.Guild: %v", err)
 		return
 	}
 
 	// Look for the message sender in that guild's current voice states.
-	for _, vs := range g.VoiceStates {
-		if vs.UserID == m.Author.ID {
-			err = sounds.Play(s, buffer, loopCount, g.ID, vs.ChannelID)
+	for _, voiceState := range guild.VoiceStates {
+		if voiceState.UserID == dcMessage.Author.ID {
+			err = sounds.Play(dcSession, buffer, loopCount, guild.ID, voiceState.ChannelID)
 			if err != nil {
 				color.Red("Error playing sound: %v", err)
 			}
