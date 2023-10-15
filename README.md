@@ -2,7 +2,9 @@
 
 Bot para tocar Seu Astral - Jorge & Mateus em loop.
 
-<iframe width="560" height="315" src="https://www.youtube.com/embed/SETK2maosQY?si=5CRuKNJ9TbQCp-qt" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+[![IMAGE ALT TEXT](http://img.youtube.com/vi/SETK2maosQY/0.jpg)](http://www.youtube.com/watch?v=SETK2maosQY "Video Title")
+
+
 
 ## Comandos
 
@@ -11,3 +13,7 @@ Bot para tocar Seu Astral - Jorge & Mateus em loop.
 | !sa start | Conecta o bot à um canal de voz e inicia a música |
 | !sa count | Exibe a contagem de vezes em que a música foi tocada |
 | !sa stop  | Para a música? |
+
+# Convidar bot para o servidor
+
+https://discord.com/api/oauth2/authorize?client_id=1162843851682218044&permissions=2184185920&scope=bot
