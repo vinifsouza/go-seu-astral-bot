@@ -1,9 +1,9 @@
 package main
 
 import (
-	"fmt"
 	"os"
 
+	"github.com/fatih/color"
 	"github.com/joho/godotenv"
 )
 
@@ -13,7 +13,7 @@ func LoadConfigs() Configs {
 	err := godotenv.Load()
 
 	if err != nil {
-		fmt.Println("File .env not found, loading environment variables.")
+		color.Yellow("File .env not found, loading environment variables.")
 	}
 
 	config := Configs{

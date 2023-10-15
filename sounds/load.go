@@ -2,15 +2,16 @@ package sounds
 
 import (
 	"encoding/binary"
-	"fmt"
 	"io"
 	"os"
+
+	"github.com/fatih/color"
 )
 
 func Load(buffer *[][]byte) error {
 	file, err := os.Open("assets/seu-astral.dca")
 	if err != nil {
-		fmt.Println("Error opening dca file :", err)
+		color.Red("Error opening dca file: %v", err)
 		return err
 	}
 
@@ -30,7 +31,7 @@ func Load(buffer *[][]byte) error {
 		}
 
 		if err != nil {
-			fmt.Println("Error reading from dca file :", err)
+			color.Red("Error reading from dca file :", err)
 			return err
 		}
 
@@ -40,7 +41,7 @@ func Load(buffer *[][]byte) error {
 
 		// Should not be any end of file errors
 		if err != nil {
-			fmt.Println("Error reading from dca file :", err)
+			color.Red("Error reading from dca file :", err)
 			return err
 		}
 

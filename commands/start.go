@@ -1,23 +1,23 @@
 package commands
 
 import (
-	"fmt"
 	"go-seu-astral-bot/sounds"
 
 	"github.com/bwmarrin/discordgo"
+	"github.com/fatih/color"
 )
 
 func Start(s *discordgo.Session, m *discordgo.MessageCreate, buffer [][]byte) {
 	c, err := s.State.Channel(m.ChannelID)
 	if err != nil {
-		fmt.Println("Error s.State.Channel: ", err)
+		color.Red("Error s.State.Channel: %v", err)
 		return
 	}
 
 	// Find the guild for that channel.
 	g, err := s.State.Guild(c.GuildID)
 	if err != nil {
-		fmt.Println("Error s.State.Guild: ", err)
+		color.Red("Error s.State.Guild: %v", err)
 		return
 	}
 
@@ -26,7 +26,7 @@ func Start(s *discordgo.Session, m *discordgo.MessageCreate, buffer [][]byte) {
 		if vs.UserID == m.Author.ID {
 			err = sounds.Play(s, buffer, g.ID, vs.ChannelID)
 			if err != nil {
-				fmt.Println("Error playing sound: ", err)
+				color.Red("Error playing sound: %v", err)
 			}
 
 			return
